@@ -1,30 +1,8 @@
 from GraphInterface import GraphInteface
+from src.EdgeData import EdgeData
+from src.NodeData import NodeData
 
 
-class NodeData:
-    def __init__(self, key: int, pos: tuple):
-        self.key = key
-        self.w = 0
-        self.parent = None
-        self.pos = pos
-
-
-class EdgeData:
-    def __init__(self, src: int, dest: int, w: float):
-        self.src = src
-        self.dest = dest
-        self.w = w
-
-    def get_w(self):
-        return self.w
-
-    def get_src(self):
-        return self.src
-
-    def get_dest(self):
-        return self.dest
-
-    
 class DiGraph(GraphInteface):
     def __init__(self):
         super()
