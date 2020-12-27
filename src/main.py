@@ -1,0 +1,42 @@
+from DiGraph import DiGraph
+
+a = DiGraph()
+print(a.v_size())
+a.add_node(1)
+a.add_node(2)
+a.add_node(3)
+a.add_node(3)
+a.add_node(3)
+a.add_node(4)
+print(a.v_size())
+print(a.e_size())
+a.add_edge(1, 2, 5.5)
+a.add_edge(1, 3, 5.6)
+a.add_edge(2, 1, 5.6)
+a.add_edge(1, 4, 5)
+a.add_edge(1, 4, 5)
+a.add_edge(1, 4, 5)
+a.add_edge(1, 4, 5)
+a.add_edge(6, 4, 5)
+print('1mc:'+a.get_mc().__str__())
+print(a.e_size())
+a.remove_edge(1, 4)
+print('2mc:'+a.get_mc().__str__())
+print(a.e_size())
+
+a.remove_edge(1, 4)
+print('3mc:'+a.get_mc().__str__())
+
+print(a.e_size())
+a.add_edge(1, 4, 5)
+print('4mc:'+a.get_mc().__str__())
+
+print(a.e_size())
+print('5mc:'+a.get_mc().__str__())
+
+a.remove_node(1)
+print('6mc:'+a.get_mc().__str__())
+
+print('asdasdada')
+print(a.e_size())
+print(a.v_size())
