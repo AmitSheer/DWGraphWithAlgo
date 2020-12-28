@@ -12,3 +12,8 @@ class EdgeData:
 
     def get_dest(self):
         return self.dest
+
+    def __eq__(self, other):
+        return other.get_dest() == self.get_dest() and \
+               other.get_src() == self.get_src() and \
+               other.get_w() == self.get_w()

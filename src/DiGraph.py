@@ -1,9 +1,9 @@
-from GraphInterface import GraphInteface
+from src.GraphInterface import GraphInterface
 from src.EdgeData import EdgeData
 from src.NodeData import NodeData
 
 
-class DiGraph(GraphInteface):
+class DiGraph(GraphInterface):
     def __init__(self):
         super()
         self.nodes = dict()
@@ -19,7 +19,7 @@ class DiGraph(GraphInteface):
         return self.edges_size
 
     def get_all_v(self) -> dict:
-        return self.nodes
+        return self.nodes.copy()
 
     def all_in_edges_of_node(self, id1: int) -> dict:
         return self.edges_into.get(id1)
@@ -82,7 +82,7 @@ class DiGraph(GraphInteface):
                 self.remove_edge(node_id, edge)
             self.edges.pop(node_id)
             self.nodes.pop(node_id)
-            self.mc -= 1
+            self.mc += 1
             return True
         return False
 

@@ -1,4 +1,4 @@
-from DiGraph import DiGraph
+from src.DiGraph import DiGraph
 
 a = DiGraph()
 print(a.v_size())
