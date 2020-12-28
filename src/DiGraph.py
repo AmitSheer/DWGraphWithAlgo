@@ -1,16 +1,20 @@
 from src.GraphInterface import GraphInterface
 from src.EdgeData import EdgeData
 from src.NodeData import NodeData
+from typing import Dict
 
 
 class DiGraph(GraphInterface):
     def __init__(self):
         super()
-        self.nodes = dict()
-        self.edges = dict()
-        self.edges_into = dict()
+        self.nodes: Dict[int, NodeData] = dict()
+        self.edges:  Dict[int, Dict[int, EdgeData]] = dict()
+        self.edges_into: Dict[int, Dict[int, EdgeData]] = dict()
         self.edges_size = 0
         self.mc = 0
+
+    def get_node(self, key: int) -> NodeData:
+        return self.nodes.get(key)
 
     def v_size(self) -> int:
         return self.nodes.__len__()

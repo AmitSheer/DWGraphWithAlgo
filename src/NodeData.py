@@ -18,6 +18,6 @@ class NodeData:
         return self.parent
 
     def __eq__(self, other):
-        return other.get_key() == self.get_key() and \
-               self.get_w() == other.get_w() and\
-               self.get_pos() == other.get_pos()
+        return other.key == self.key and \
+               self.w == other.w and\
+               self.pos == other.pos
