@@ -1,6 +1,8 @@
+import json
+
 from src.GraphInterface import GraphInterface
-from src.EdgeData import EdgeData
-from src.NodeData import NodeData
+from src.EdgeData import EdgeData, EdgeDataEncoder
+from src.NodeData import NodeData, NodeDataEncoder
 from typing import Dict
 
 
@@ -51,7 +53,7 @@ class DiGraph(GraphInterface):
             if self.edges_into.get(id2).get(id1) is None:
                 self.edges_size += 1
             else:
-                if self.edges.get(id1).get(id2).get_w() == weight:
+                if self.edges.get(id1).get(id2).w == weight:
                     return True
             self.mc += 1
             self.edges.get(id1).__setitem__(id2, e)
@@ -64,6 +66,15 @@ class DiGraph(GraphInterface):
             self.nodes.__setitem__(node_id, NodeData(node_id, pos))
             self.edges.__setitem__(node_id, dict())
             self.edges_into.__setitem__(node_id, dict())
+            self.mc += 1
+            return True
+        return False
+
+    def add_node_as_nodedata(self, node: NodeData) -> bool:
+        if self.nodes.get(node.key) is None:
+            self.nodes.__setitem__(node.key, node)
+            self.edges.__setitem__(node.key, dict())
+            self.edges_into.__setitem__(node.key, dict())
             self.mc += 1
             return True
         return False
@@ -115,3 +126,15 @@ class DiGraph(GraphInterface):
             for e in edge.values():
                 edges.append(e)
         return '{ Nodes: ' + str(list(self.nodes.values())) + ', Edges:' + str(edges) + '}'
+
+
+class DiGraphEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, DiGraph):
+            node_data = NodeDataEncoder()
+            edge_data = EdgeDataEncoder()
+            return {
+                'Nodes': [node_data.default(x) for x in list(obj.nodes.values())],
+                'Edges': [edge_data.default(y) for x in obj.edges.values() for y in x.values()]
+            }
+        return json.JSONEncoder.default(self, obj)
