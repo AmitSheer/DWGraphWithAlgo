@@ -19,13 +19,13 @@ class DiGraph(GraphInterface):
         return self.nodes.get(key)
 
     def v_size(self) -> int:
-        return self.nodes.__len__()
+        return len(self.nodes)
 
     def e_size(self) -> int:
         return self.edges_size
 
     def get_all_v(self) -> dict:
-        return self.nodes.copy()
+        return self.nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
         return self.edges_into.get(id1)
