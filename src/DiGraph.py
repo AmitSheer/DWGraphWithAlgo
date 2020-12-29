@@ -110,4 +110,8 @@ class DiGraph(GraphInterface):
         return False
 
     def __repr__(self):
-        return '{' + self.nodes.__str__() + '},{'+ self.edges.values().__str__()
+        edges = []
+        for edge in self.edges.values():
+            for e in edge.values():
+                edges.append(e)
+        return '{ Nodes: ' + str(list(self.nodes.values())) + ', Edges:' + str(edges) + '}'
