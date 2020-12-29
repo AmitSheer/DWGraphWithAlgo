@@ -10,8 +10,9 @@ from src.NodeData import NodeData
 
 
 class GraphAlgo(GraphAlgoInterface):
-    def __init__(self, graph: GraphInterface):
+    def __init__(self, graph: GraphInterface = None):
         super()
+        self.sccList: List[list] = []
         self.graph = graph
 
     def get_graph(self) -> GraphInterface:
@@ -23,7 +24,16 @@ class GraphAlgo(GraphAlgoInterface):
             fs = open(file_name, 'r')
             j = json.load(fs)
             for node in j['Nodes']:
-                graph.add_node(node['id'], node['pos'])
+                id: int
+                try:
+                    id = node['id']
+                    try:
+                        pos = node['pos']
+                        graph.add_node(id, pos)
+                    except:
+                        graph.add_node(id, None)
+                except:
+                    return False
             for edge in j['Edges']:
                 graph.add_edge(edge['src'], edge['dest'], edge['w'])
             self.graph = graph
@@ -69,6 +79,7 @@ class GraphAlgo(GraphAlgoInterface):
             nodes_path.append(node.parent.key)
             node = node.parent
         node = self.graph.get_all_v().get(id2)
+        nodes_path.reverse()
         return node.dist, nodes_path
 
     def connected_component(self, id1: int) -> list:
@@ -77,14 +88,16 @@ class GraphAlgo(GraphAlgoInterface):
         @param id1: The node id
         @return: The list of nodes in the SCC
         """
-        return self.trajan(id1).pop()
+        self.trajan(id1)
+        return self.sccList.pop()
 
     def connected_components(self) -> List[list]:
         """
         Finds all the Strongly Connected Component(SCC) in the graph.
         @return: The list all SCC
         """
-        return self.trajan()
+        self.trajan()
+        return self.sccList
 
     def plot_graph(self) -> None:
         """
@@ -113,7 +126,7 @@ class GraphAlgo(GraphAlgoInterface):
         visited = 0
 
         # using tuple here so the values won change
-        unvisited_queue = [(node.dist, node) for node in list(self.graph.get_all_v().values())]
+        unvisited_queue = [(start.dist, start)]
         heapq.heapify(unvisited_queue)
 
         while len(unvisited_queue) and visited != self.graph.v_size():
@@ -128,44 +141,42 @@ class GraphAlgo(GraphAlgoInterface):
                         self.graph.get_all_v().get(edge.dest).parent = current_node
                         unvisited_queue.append(
                             (self.graph.get_all_v().get(edge.dest).dist, self.graph.get_all_v().get(edge.dest)))
-            heapq.heapify(unvisited_queue)
+                heapq.heapify(unvisited_queue)
 
-    def trajan(self, node_id: int = None ) -> List[list]:
-        global sccList
-        global index
-        global stack
-        sccList = []
-        index = 0
+    def trajan(self, node_id: int = None):
+        self.reset()
         stack = []
-
-        def dfs(curr: NodeData):
-            curr.index = index
-            curr.low_link = index
-            index += 1
-            curr.visited = True
-            stack.append(curr)
-            for edge in list(self.graph.all_out_edges_of_node(curr.key).values()):
-                if self.graph.get_all_v().get(edge.dest).index is None:
-                    dfs(self.graph.get_all_v().get(edge.dest))
-                    curr.low_link = min(curr.low_link, self.graph.get_all_v().get(edge.dest).low_link)
-                elif self.graph.get_all_v().get(edge.dest).visited:
-                    curr.low_link = min(curr.low_link, self.graph.get_all_v().get(edge.dest).index)
-
-            if curr.low_link == curr.index:
-                scc = []
-
-                while len(stack):
-                    popped_node = stack.pop()
-                    popped_node.visited = False
-                    scc.append(popped_node)
-                    if popped_node == curr:
-                        break
-
+        self.index = 0
         if node_id is None:
             for node in list(self.graph.get_all_v().values()):
                 if node.index is None:
-                    dfs(node)
+                    self.dfs(node, stack)
         else:
-            dfs(self.graph.get_all_v().get(node_id))
-        return sccList
+            self.dfs(self.graph.get_all_v().get(node_id), stack)
+
     # def tarjan_for_single_node(self, node_id):
+
+    def dfs(self, curr: NodeData, stack):
+        curr.low_link = self.index
+        curr.index = self.index
+        curr.visited = True
+        stack.append(curr)
+        curr.index = self.index
+        self.index += 1
+        for n in list([self.graph.get_all_v().get(edge.dest)] for edge in
+                      self.graph.all_out_edges_of_node(curr.key).values()):
+            node = n.pop()
+            if node.index is None:
+                self.dfs(node, stack)
+                curr.low_link = min(curr.low_link, node.low_link)
+            elif node.visited:
+                curr.low_link = min(curr.low_link, node.index)
+        if curr.low_link == curr.index:
+            scc = []
+            while len(stack):
+                popped_node = stack.pop()
+                popped_node.visited = False
+                scc.append(popped_node)
+                if popped_node == curr:
+                    break
+            self.sccList.append(scc)

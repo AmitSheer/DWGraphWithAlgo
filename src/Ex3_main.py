@@ -23,8 +23,8 @@ def check():
 
         """
     check0()
-    # check1()
-    # check2()
+    check1()
+    check2()
 
 def check0():
     """
@@ -60,7 +60,7 @@ def check1():
     print(g_algo.shortest_path(0, 3))
     print(g_algo.shortest_path(3, 1))
     g_algo.save_to_json(file+'_saved')
-    g_algo.plot_graph()
+    # g_algo.plot_graph()
 
 def check2():
     """ This function tests the naming, basic testing over A5 json file.
