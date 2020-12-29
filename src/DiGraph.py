@@ -8,7 +8,7 @@ class DiGraph(GraphInterface):
     def __init__(self):
         super()
         self.nodes: Dict[int, NodeData] = dict()
-        self.edges:  Dict[int, Dict[int, EdgeData]] = dict()
+        self.edges: Dict[int, Dict[int, EdgeData]] = dict()
         self.edges_into: Dict[int, Dict[int, EdgeData]] = dict()
         self.edges_size = 0
         self.mc = 0
@@ -108,3 +108,6 @@ class DiGraph(GraphInterface):
                 self.edges_size -= 1
                 return True
         return False
+
+    def __repr__(self):
+        return '{' + self.nodes.__str__() + '},{'+ self.edges.values().__str__()

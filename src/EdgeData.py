@@ -4,14 +4,8 @@ class EdgeData:
         self.dest = dest
         self.w = w
 
-    def get_w(self):
-        return self.w
-
-    def get_src(self):
-        return self.src
-
-    def get_dest(self):
-        return self.dest
+    def __repr__(self):
+        return "{src:"+self.src.__str__()+", dest:"+self.dest.__str__()+", w:"+self.w.__str__()+"}"
 
     def __eq__(self, other):
         return other.dest == self.dest and \
