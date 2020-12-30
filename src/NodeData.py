@@ -21,17 +21,25 @@ class NodeData:
         self.low_link = None
 
     def __repr__(self):
-        return '{id:' + self.key.__str__() + ', pos:' + self.pos.__str__() + '}'
+        if self.pos is ():
+            return '{id:' + self.key.__str__() + ', pos:' + self.pos.__str__() + '}'
+        else:
+            return '{id:' + self.key.__str__() + '}'
 
     def __eq__(self, other):
-        return other.dist == self.dist
+        return other.dist == self.dist and other.pos == self.pos and other.key == self.key
 
 
 class NodeDataEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, NodeData):
-            return {
-                'id': obj.key,
-                'pos': obj.pos
-            }
+            if obj.pos is not ():
+                return {
+                    'id': obj.key,
+                    'pos': obj.pos
+                }
+            else:
+                return {
+                    'id': obj.key
+                }
         return json.JSONEncoder.default(self, obj)

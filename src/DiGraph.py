@@ -127,6 +127,9 @@ class DiGraph(GraphInterface):
                 edges.append(e)
         return '{ Nodes: ' + str(list(self.nodes.values())) + ', Edges:' + str(edges) + '}'
 
+    def __eq__(self, other):
+        return self.nodes == other.nodes and self.edges == other.edges
+
 
 class DiGraphEncoder(json.JSONEncoder):
     def default(self, obj):
