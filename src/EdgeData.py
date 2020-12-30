@@ -17,12 +17,4 @@ class EdgeData:
                other.w == self.w
 
 
-class EdgeDataEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, EdgeData):
-            return {
-                'src': obj.src,
-                'dest': obj.dest,
-                'w': obj.w
-            }
-        return json.JSONEncoder.default(self, obj)
+

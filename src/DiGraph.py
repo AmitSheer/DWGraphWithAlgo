@@ -1,8 +1,9 @@
 import json
 
 from src.GraphInterface import GraphInterface
-from src.EdgeData import EdgeData, EdgeDataEncoder
-from src.NodeData import NodeData, NodeDataEncoder
+from src.EdgeData import EdgeData
+from src.NodeData import NodeData
+from src.Encoders import EdgeDataEncoder , NodeDataEncoder
 from typing import Dict
 
 
@@ -129,15 +130,3 @@ class DiGraph(GraphInterface):
 
     def __eq__(self, other):
         return self.nodes == other.nodes and self.edges == other.edges
-
-
-class DiGraphEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, DiGraph):
-            node_data = NodeDataEncoder()
-            edge_data = EdgeDataEncoder()
-            return {
-                'Nodes': [node_data.default(x) for x in list(obj.nodes.values())],
-                'Edges': [edge_data.default(y) for x in obj.edges.values() for y in x.values()]
-            }
-        return json.JSONEncoder.default(self, obj)
