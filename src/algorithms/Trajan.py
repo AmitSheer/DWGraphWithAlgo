@@ -1,6 +1,7 @@
 from typing import List
 
-from src import GraphInterface, NodeData
+from src import GraphInterface
+from src.NodeData import NodeData
 
 global sccList
 index = 0
@@ -8,25 +9,24 @@ index = 0
 
 def dfs(curr: NodeData, stack, graph: GraphInterface):
     global index
-    curr.low_link = index
-    curr.index = index
-    curr.visited = True
+    curr.set_low_link(index)
+    curr.set_index(index)
+    curr.set_visited(True)
     stack.append(curr)
-    curr.index = index
     index += 1
-    for n in list([graph.get_all_v().get(edge.dest)] for edge in
-                  graph.all_out_edges_of_node(curr.key).values()):
-        node = n.pop()
-        if node.index is None:
+    for n in list([graph.get_all_v().get(edge.get_dest())] for edge in
+                  graph.all_out_edges_of_node(curr.get_key()).values()):
+        node: NodeData = n.pop()
+        if node.get_index() is None:
             dfs(node, stack, graph)
-            curr.low_link = min(curr.low_link, node.low_link)
-        elif node.visited:
-            curr.low_link = min(curr.low_link, node.index)
-    if curr.low_link == curr.index:
+            curr.set_low_link(min(curr.get_low_link(), node.get_low_link()))
+        elif node.get_visited():
+            curr.set_low_link(min(curr.get_low_link(), node.get_index()))
+    if curr.get_low_link() == curr.get_index():
         scc = []
         while len(stack):
-            popped_node = stack.pop()
-            popped_node.visited = False
+            popped_node: NodeData = stack.pop()
+            popped_node.set_visited(False)
             scc.append(popped_node)
             if popped_node == curr:
                 break
@@ -41,7 +41,7 @@ def trajan(graph: GraphInterface, node_id: int = None) -> List[list]:
     stack = []
     if node_id is None:
         for node in list(graph.get_all_v().values()):
-            if node.index is None:
+            if node.get_index() is None:
                 dfs(node, stack, graph)
     else:
         dfs(graph.get_all_v().get(node_id), stack, graph)
