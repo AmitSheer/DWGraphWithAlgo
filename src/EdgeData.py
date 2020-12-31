@@ -6,7 +6,6 @@ class EdgeData:
         self.__src = src
         self.__dest = dest
         self.__w = w
-        self.__type = -1
 
     def get_src(self):
         return self.__src

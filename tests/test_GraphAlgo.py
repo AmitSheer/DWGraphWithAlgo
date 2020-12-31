@@ -61,11 +61,14 @@ class TestGraphAlgo(unittest.TestCase):
         self.graph.add_edge(0, 1, 1)
         self.graph.add_edge(1, 0, 1.1)
         self.graph.add_edge(1, 2, 1.3)
-        self.graph.add_edge(1, 3, 1.8)
         self.graph.add_edge(2, 3, 1.1)
         graph_algo = GraphAlgo(self.graph)
         shortest_path: List[list] = graph_algo.shortest_path(1, 3)
-        self.assertEqual((1.8, [1, 3]), shortest_path)
+        self.assertEqual((2.4000000000000004, [1, 2]), shortest_path)
+        self.graph.add_edge(1, 3, 1.8)
+        shortest_path: List[list] = graph_algo.shortest_path(1, 3)
+        self.assertEqual((1.8, [1]), shortest_path)
+
 
     def test_shortest_path_not_connected_nodes(self):
         self.graph = DiGraph()
@@ -79,7 +82,7 @@ class TestGraphAlgo(unittest.TestCase):
         self.graph.add_node(4)
         graph_algo = GraphAlgo(self.graph)
         shortest_path: List[list] = graph_algo.shortest_path(1, 4)
-        self.assertEqual((sys.maxsize, [4]), shortest_path)
+        self.assertEqual((float('inf'), []), shortest_path)
 
     def test_connected_component(self):
         self.graph = DiGraph()
@@ -121,7 +124,7 @@ class TestGraphAlgo(unittest.TestCase):
         self.assertEqual([NodeData(1), NodeData(0)], scc[1])
         self.assertEqual([NodeData(4), NodeData(3)], scc[2])
 
-
     def test_plot_graph(self):
-        self.fail()
-
+        algo = GraphAlgo()
+        algo.load_from_json('../data/A5')
+        algo.plot_graph()

@@ -1,9 +1,6 @@
 import json
-import sys
-
-import matplotlib.pyplot as plt
-import numpy as np
-from typing import List
+from typing import List, IO
+from src.GraphPloter import *
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -23,6 +20,7 @@ class GraphAlgo(GraphAlgoInterface):
         return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
+        fs: IO
         try:
             graph = DiGraph()
             fs = open(file_name, 'r')
@@ -44,6 +42,8 @@ class GraphAlgo(GraphAlgoInterface):
             return True
         except:
             return False
+        finally:
+            fs.close()
 
     def save_to_json(self, file_name: str) -> bool:
         try:
@@ -80,7 +80,7 @@ class GraphAlgo(GraphAlgoInterface):
         dijkstra(self.graph.get_all_v().get(id1), id2, self.graph)
         nodes_path = []
         node: NodeData = self.graph.get_all_v().get(id2)
-        nodes_path.append(node.get_key())
+        # nodes_path.append(node.get_key())
         while node.get_parent() is not None:
             nodes_path.append(node.get_parent().get_key())
             node = node.get_parent()
@@ -112,32 +112,13 @@ class GraphAlgo(GraphAlgoInterface):
         Otherwise, they will be placed in a random but elegant manner.
         @return: None
         """
-        min_x: float = sys.maxsize
-        min_y: float = sys.maxsize
-        max_x: float = 0
-        max_y: float = 0
-        for node in self.graph.get_all_v().values():
-            if node.pos[0] > max_x:
-                max_x = node.pos[0]
-            if node.pos[0] < min_x:
-                min_x = node.pos[0]
-            if node.pos[1] > max_y:
-                max_y = node.pos[1]
-            if node.pos[1] < min_y:
-                min_y = node.pos[1]
-        plt.axis([min_x, max_x, min_y, max_y])
-        # fig, ax = plt.subplots()
-        # for node in self.graph.get_all_v().values():
-        #     ax.plot(node.pos[0], node.pos[1], node.pos[2])
-        plt.show()
+        plotter(self.graph)
 
     def reset(self):
         for node in list(self.graph.get_all_v().values()):
-            node.set_dist(sys.maxsize)
+            node.set_dist(float('inf'))
             node.set_visited(False)
             node.set_parent(None)
             node.set_type(-1)
             node.set_index(None)
             node.set_low_link(None)
-            # for edge in list(self.graph.all_out_edges_of_node(node.get_key()).values()):
-            #     edge.type = -1

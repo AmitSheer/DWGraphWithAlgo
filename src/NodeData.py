@@ -1,5 +1,3 @@
-import sys
-
 from src.Location import Location
 
 
@@ -12,16 +10,21 @@ class NodeData:
         # params for algorithms
         self.__parent = None
         self.__type = -1
-        self.__dist = sys.maxsize
+        self.__dist = float('inf')
         self.__visited = False
         self.__index = None
         self.__low_link = None
 
+    #  returns the Location object
+    def get_location(self) -> Location:
+        return self.__pos
+
+    # return the location as tuple of (x,y,z)
     def get_pos(self) -> tuple:
         return self.__pos.get_point()
 
-    def set_pos(self, point: str):
-        self.__pos.set_point_from_string(point)
+    def set_pos(self, point):
+        self.__pos.set_point(point)
 
     def get_key(self) -> int:
         return self.__key
