@@ -14,8 +14,8 @@ def dfs(curr: NodeData, stack, graph: GraphInterface):
     curr.set_visited(True)
     stack.append(curr)
     index += 1
-    for n in list([graph.get_all_v().get(edge.get_dest())] for edge in
-                  graph.all_out_edges_of_node(curr.get_key()).values()):
+    for n in list([graph.get_all_v().get(dest)] for dest in
+                  graph.all_out_edges_of_node(curr.get_key())):
         node: NodeData = n.pop()
         if node.get_index() is None:
             dfs(node, stack, graph)

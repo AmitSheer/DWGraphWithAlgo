@@ -139,5 +139,5 @@ class GraphAlgo(GraphAlgoInterface):
             node.set_type(-1)
             node.set_index(None)
             node.set_low_link(None)
-            for edge in list(self.graph.all_out_edges_of_node(node.get_key()).values()):
-                edge.type = -1
+            # for edge in list(self.graph.all_out_edges_of_node(node.get_key()).values()):
+            #     edge.type = -1

@@ -39,7 +39,7 @@ class TestDiGraph(unittest.TestCase):
         graph.add_edge(2, 1, 1)
         edges_in = graph.all_in_edges_of_node(1)
         self.assertEqual(len(edges_in.values()), 1, 'not all nodes returned')
-        self.assertEqual(edges_in.get(2), EdgeData(2, 1, 1), 'Doesn\'t contain all edges')
+        self.assertEqual(edges_in.get(2), 1, 'Doesn\'t contain all edges')
 
     def test_all_out_edges_of_node(self):
         graph = DiGraph()
@@ -52,8 +52,8 @@ class TestDiGraph(unittest.TestCase):
         graph.add_edge(2, 3, 1)
         edges_in = graph.all_out_edges_of_node(1)
         self.assertEqual(len(edges_in.values()), 2, 'not all nodes returned')
-        self.assertEqual(edges_in.get(2), EdgeData(1, 2, 1), 'Doesn\'t contain all edges')
-        self.assertEqual(edges_in.get(3), EdgeData(1, 3, 1), 'Doesn\'t contain all edges')
+        self.assertEqual(edges_in.get(2), 1, 'Doesn\'t contain all edges')
+        self.assertEqual(edges_in.get(3), 1, 'Doesn\'t contain all edges')
 
     def test_get_mc(self):
         graph = DiGraph()
@@ -76,11 +76,11 @@ class TestDiGraph(unittest.TestCase):
         graph.add_node(1)
         graph.add_node(2)
         graph.add_edge(1, 2, 1)
-        self.assertEqual(graph.all_in_edges_of_node(2).get(1), EdgeData(1, 2, 1), "yalla")
-        self.assertEqual(graph.all_out_edges_of_node(1).get(2), EdgeData(1, 2, 1), "yalla")
+        self.assertEqual(graph.all_in_edges_of_node(2).get(1), 1, "yalla")
+        self.assertEqual(graph.all_out_edges_of_node(1).get(2), 1, "yalla")
         graph.add_edge(1, 2, 1)
-        self.assertEqual(graph.all_out_edges_of_node(1).get(2), EdgeData(1, 2, 1), "failed in add duplicate test")
-        self.assertEqual(graph.all_in_edges_of_node(2).get(1), EdgeData(1, 2, 1), "failed in add duplicate test")
+        self.assertEqual(graph.all_out_edges_of_node(1).get(2), 1, "failed in add duplicate test")
+        self.assertEqual(graph.all_in_edges_of_node(2).get(1), 1, "failed in add duplicate test")
         self.assertEqual(graph.e_size(), 1, "failed in add duplicate test")
 
         graph.add_edge(1, 1, 1)
@@ -115,8 +115,8 @@ class TestDiGraph(unittest.TestCase):
         graph.add_node(3)
         graph.add_edge(1, 2, 1)
         graph.add_edge(1, 3, 1)
-        self.assertEqual(graph.all_in_edges_of_node(2).get(1), EdgeData(1, 2, 1))
-        self.assertEqual(graph.all_out_edges_of_node(1).get(2), EdgeData(1, 2, 1))
+        self.assertEqual(graph.all_in_edges_of_node(2).get(1), 1)
+        self.assertEqual(graph.all_out_edges_of_node(1).get(2), 1)
         graph.remove_edge(1, 2)
         self.assertEqual(graph.all_in_edges_of_node(2).get(1), None)
         self.assertEqual(graph.all_out_edges_of_node(1).get(2), None)

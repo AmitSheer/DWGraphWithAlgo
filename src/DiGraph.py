@@ -3,39 +3,48 @@ import json
 from src.GraphInterface import GraphInterface
 from src.EdgeData import EdgeData
 from src.NodeData import NodeData
-from src.Encoders import EdgeDataEncoder , NodeDataEncoder
-from typing import Dict
+from src.Encoders import EdgeDataEncoder, NodeDataEncoder
+from typing import Dict, List
 
 
 class DiGraph(GraphInterface):
     def __init__(self):
         super()
-        self.nodes: Dict[int, NodeData] = dict()
-        self.edges: Dict[int, Dict[int, EdgeData]] = dict()
-        self.edges_into: Dict[int, Dict[int, EdgeData]] = dict()
-        self.edges_size = 0
-        self.mc = 0
+        self.__nodes: Dict[int, NodeData] = dict()
+        self.__edges: Dict[int, Dict[int, EdgeData]] = dict()
+        self.__edges_into: Dict[int, Dict[int, EdgeData]] = dict()
+        self.__edges_size = 0
+        self.__mc = 0
 
     def get_node(self, key: int) -> NodeData:
-        return self.nodes.get(key)
+        return self.__nodes.get(key)
+
+    def get_edges(self) -> List[EdgeData]:
+        return [edge for node_edges in self.__edges.values() for edge in node_edges.values()]
 
     def v_size(self) -> int:
-        return len(self.nodes)
+        return len(self.__nodes)
 
     def e_size(self) -> int:
-        return self.edges_size
+        return self.__edges_size
 
     def get_all_v(self) -> dict:
-        return self.nodes
+        return self.__nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        return self.edges_into.get(id1)
+        edges: Dict[int, float] = {}
+        for edge in self.__edges_into.get(id1).values():
+            edges.__setitem__(edge.get_src(), edge.get_w())
+        return edges
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        return self.edges.get(id1)
+        edges: Dict[int, float] = {}
+        for edge in self.__edges.get(id1).values():
+            edges.__setitem__(edge.get_dest(), edge.get_w())
+        return edges
 
     def get_mc(self) -> int:
-        return self.mc
+        return self.__mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         """
@@ -47,36 +56,36 @@ class DiGraph(GraphInterface):
                 Note: If the edge already exists or one of the nodes dose not exists the functions will do nothing
                 """
         if weight >= 0 and \
-                self.nodes.get(id1) is not None and \
-                self.nodes.get(id2) is not None and \
+                self.__nodes.get(id1) is not None and \
+                self.__nodes.get(id2) is not None and \
                 id1 != id2:
             e = EdgeData(id1, id2, weight)
-            if self.edges_into.get(id2).get(id1) is None:
-                self.edges_size += 1
+            if self.__edges_into.get(id2).get(id1) is None:
+                self.__edges_size += 1
             else:
-                if self.edges.get(id1).get(id2).w == weight:
+                if self.__edges.get(id1).get(id2).get_w() == weight:
                     return True
-            self.mc += 1
-            self.edges.get(id1).__setitem__(id2, e)
-            self.edges_into.get(id2).__setitem__(id1, e)
+            self.__mc += 1
+            self.__edges.get(id1).__setitem__(id2, e)
+            self.__edges_into.get(id2).__setitem__(id1, e)
             return True
         return False
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        if self.nodes.get(node_id) is None:
-            self.nodes.__setitem__(node_id, NodeData(node_id, pos))
-            self.edges.__setitem__(node_id, dict())
-            self.edges_into.__setitem__(node_id, dict())
-            self.mc += 1
+        if self.__nodes.get(node_id) is None:
+            self.__nodes.__setitem__(node_id, NodeData(node_id, pos))
+            self.__edges.__setitem__(node_id, dict())
+            self.__edges_into.__setitem__(node_id, dict())
+            self.__mc += 1
             return True
         return False
 
     def add_node_as_nodedata(self, node: NodeData) -> bool:
-        if self.nodes.get(node.key) is None:
-            self.nodes.__setitem__(node.key, node)
-            self.edges.__setitem__(node.key, dict())
-            self.edges_into.__setitem__(node.key, dict())
-            self.mc += 1
+        if self.__nodes.get(node.key) is None:
+            self.__nodes.__setitem__(node.key, node)
+            self.__edges.__setitem__(node.key, dict())
+            self.__edges_into.__setitem__(node.key, dict())
+            self.__mc += 1
             return True
         return False
 
@@ -88,17 +97,17 @@ class DiGraph(GraphInterface):
 
         Note: if the node id does not exists the function will do nothing
         """
-        if self.nodes.get(node_id) is not None:
+        if self.__nodes.get(node_id) is not None:
             edges = self.all_in_edges_of_node(node_id).copy()
             for edge in edges:
                 self.remove_edge(edge, node_id)
-            self.edges_into.pop(node_id)
+            self.__edges_into.pop(node_id)
             edges = self.all_out_edges_of_node(node_id).copy()
             for edge in edges:
                 self.remove_edge(node_id, edge)
-            self.edges.pop(node_id)
-            self.nodes.pop(node_id)
-            self.mc += 1
+            self.__edges.pop(node_id)
+            self.__nodes.pop(node_id)
+            self.__mc += 1
             return True
         return False
 
@@ -111,22 +120,22 @@ class DiGraph(GraphInterface):
 
         Note: If such an edge does not exists the function will do nothing
         """
-        if self.edges.get(node_id1) is not None:
-            node: dict = self.edges.get(node_id1)
+        if self.__edges.get(node_id1) is not None:
+            node: dict = self.__edges.get(node_id1)
             if node.get(node_id2) is not None:
-                self.edges.get(node_id1).pop(node_id2)
-                self.edges_into.get(node_id2).pop(node_id1)
-                self.mc += 1
-                self.edges_size -= 1
+                self.__edges.get(node_id1).pop(node_id2)
+                self.__edges_into.get(node_id2).pop(node_id1)
+                self.__mc += 1
+                self.__edges_size -= 1
                 return True
         return False
 
     def __repr__(self):
         edges = []
-        for edge in self.edges.values():
+        for edge in self.__edges.values():
             for e in edge.values():
                 edges.append(e)
-        return '{ Nodes: ' + str(list(self.nodes.values())) + ', Edges:' + str(edges) + '}'
+        return '{ Nodes: ' + str(list(self.__nodes.values())) + ', Edges:' + str(edges) + '}'
 
     def __eq__(self, other):
-        return self.nodes == other.nodes and self.edges == other.edges
+        return self.__nodes == other.__nodes and self.__edges == other.__edges

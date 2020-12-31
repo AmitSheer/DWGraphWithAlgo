@@ -1,6 +1,7 @@
 import json
 
 from src.DiGraph import DiGraph
+from src.EdgeData import EdgeData
 from src.Encoders.EdgeDataEncoder import EdgeDataEncoder
 from src.Encoders.NodeDataEncoder import NodeDataEncoder
 
@@ -11,7 +12,7 @@ class DiGraphEncoder(json.JSONEncoder):
             node_data = NodeDataEncoder()
             edge_data = EdgeDataEncoder()
             return {
-                'Nodes': [node_data.default(x) for x in list(obj.nodes.values())],
-                'Edges': [edge_data.default(y) for x in obj.edges.values() for y in x.values()]
+                'Nodes': [node_data.default(x) for x in list(obj.get_all_v().values())],
+                'Edges': [edge_data.default(x) for x in obj.get_edges()]
             }
         return json.JSONEncoder.default(self, obj)

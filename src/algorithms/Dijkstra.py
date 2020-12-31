@@ -19,10 +19,10 @@ def dijkstra(start: NodeData, key_to_find: int, graph: GraphInterface):
             current_node.set_visited(True)
             if key_to_find == current_node.get_key():
                 return
-            for edge in graph.all_out_edges_of_node(current_node.get_key()).values():
-                if (edge.get_w() + current_node.get_dist()) < graph.get_all_v().get(edge.get_dest()).get_dist():
-                    graph.get_all_v().get(edge.get_dest()).set_dist(edge.get_w() + current_node.get_dist())
-                    graph.get_all_v().get(edge.get_dest()).set_parent(current_node)
+            for dest, w in graph.all_out_edges_of_node(current_node.get_key()).items():
+                if (w + current_node.get_dist()) < graph.get_all_v().get(dest).get_dist():
+                    graph.get_all_v().get(dest).set_dist(w + current_node.get_dist())
+                    graph.get_all_v().get(dest).set_parent(current_node)
                     unvisited_queue.append(
-                        (graph.get_all_v().get(edge.get_dest()).get_dist(), graph.get_all_v().get(edge.get_dest())))
+                        (graph.get_all_v().get(dest).get_dist(), graph.get_all_v().get(dest)))
             heapq.heapify(unvisited_queue)
