@@ -1,4 +1,5 @@
 import json
+from random import random
 from typing import List, IO
 from src.GraphPloter import *
 from src.DiGraph import DiGraph
@@ -8,6 +9,7 @@ from src.Encoders.DiGraphEncoder import DiGraphEncoder
 from src.NodeData import NodeData
 from src.algorithms.Dijkstra import dijkstra
 from src.algorithms.Trajan import trajan
+from src.fruchterman_reingold import fruchterman_reingold
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -18,6 +20,15 @@ class GraphAlgo(GraphAlgoInterface):
 
     def get_graph(self) -> GraphInterface:
         return self.graph
+
+    def copy_graph(self) -> DiGraph:
+        g = DiGraph()
+        for node in self.graph.get_all_v().values():
+            g.add_node(node.get_key(), node.get_pos())
+        for node in self.graph.get_all_v():
+            for key, w in self.graph.all_out_edges_of_node(node).items():
+                g.add_edge(node, key, w)
+        return g
 
     def load_from_json(self, file_name: str) -> bool:
         fs: IO
@@ -39,11 +50,10 @@ class GraphAlgo(GraphAlgoInterface):
             for edge in j['Edges']:
                 graph.add_edge(edge['src'], edge['dest'], edge['w'])
             self.graph = graph
+            fs.close()
             return True
         except:
             return False
-        finally:
-            fs.close()
 
     def save_to_json(self, file_name: str) -> bool:
         try:
@@ -112,7 +122,20 @@ class GraphAlgo(GraphAlgoInterface):
         Otherwise, they will be placed in a random but elegant manner.
         @return: None
         """
-        plotter(self.graph)
+        g: DiGraph = self.copy_graph()
+        # vortex_with_no_point = [node for node in g.get_all_v().values()]
+        vortex_with_no_point = [node for node in g.get_all_v().values() if
+                                node.get_pos() is None or node.get_pos() == (None, None, None)]
+        if len(vortex_with_no_point) == self.graph.v_size() and g.v_size() > 0:
+            fruchterman_reingold(g)
+        elif len(vortex_with_no_point) > 0:
+            frame = get_frame(self.graph)
+            W = abs(frame[1] - frame[0])
+            L = abs(frame[3] - frame[2])
+            for node in vortex_with_no_point:
+                n = g.get_node(node.get_key())
+                n.set_pos((frame[0] + W * random(), frame[2] + L * random(), 0))
+        plotter(g)
 
     def reset(self):
         for node in list(self.graph.get_all_v().values()):

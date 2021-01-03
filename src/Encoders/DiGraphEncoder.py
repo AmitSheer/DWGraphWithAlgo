@@ -1,7 +1,5 @@
 import json
-
 from src.DiGraph import DiGraph
-from src.EdgeData import EdgeData
 from src.Encoders.EdgeDataEncoder import EdgeDataEncoder
 from src.Encoders.NodeDataEncoder import NodeDataEncoder
 

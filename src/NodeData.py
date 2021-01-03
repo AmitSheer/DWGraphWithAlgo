@@ -8,6 +8,9 @@ class NodeData:
         self.__pos: Location = Location()
         self.__pos.set_point(pos)
         # params for algorithms
+        self.dx = 0
+        self.dy = 0
+        self.disp = 0
         self.__parent = None
         self.__type = -1
         self.__dist = float('inf')

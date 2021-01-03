@@ -1,4 +1,6 @@
 import math
+
+
 class Location:
     def __init__(self, x: float = None, y: float = None, z: float = None):
         self.__x = x
@@ -14,7 +16,16 @@ class Location:
     def get_z(self):
         return self.__z
 
-    def set_point(self, pos: tuple = None):
+    def set_x(self, x):
+        self.__x = x
+
+    def set_y(self, y):
+        self.__y = y
+
+    def set_z(self, z):
+        self.__z = z
+
+    def set_point(self, pos=None):
         if pos.__class__ is str:
             self.set_point_from_string(pos)
         elif pos is not None:
@@ -29,13 +40,14 @@ class Location:
         self.__z = float(values[2])
 
     def distance(self, point) -> float:
-        dx = self.__x-point.get_x()
+        dx = self.__x - point.get_x()
         dy = self.__y - point.get_y()
-        dz = self.__z - point.get_z()
-        return math.sqrt(dz*dz+dx*dx+dy*dy)
+
+        # dz = self.__z - point.get_z()
+        return math.sqrt(dx * dx + dy * dy)
 
     def get_point(self):
-        if self.__y is None or self.__x is None or self.__z is None:
+        if self.__y is None and self.__x is None and self.__z is None:
             return None
         return self.__x, self.__y, self.__z
 
