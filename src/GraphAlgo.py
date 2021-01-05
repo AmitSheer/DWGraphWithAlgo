@@ -10,6 +10,8 @@ from src.NodeData import NodeData
 from src.algorithms.Dijkstra import dijkstra
 from src.algorithms.Trajan import trajan
 from src.fruchterman_reingold import fruchterman_reingold
+from src import layout
+# from main import shit
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -123,11 +125,17 @@ class GraphAlgo(GraphAlgoInterface):
         @return: None
         """
         g: DiGraph = self.copy_graph()
-        # vortex_with_no_point = [node for node in g.get_all_v().values()]
-        vortex_with_no_point = [node for node in g.get_all_v().values() if
-                                node.get_pos() is None or node.get_pos() == (None, None, None)]
+        vortex_with_no_point = [node for node in g.get_all_v().values()]
+        # vortex_with_no_point = [node for node in g.get_all_v().values() if
+        #                         node.get_pos() is None or node.get_pos() == (None, None, None)]
         if len(vortex_with_no_point) == self.graph.v_size() and g.v_size() > 0:
-            fruchterman_reingold(g)
+            layout.circle(g)
+            for i in range(50):
+                for v in g.get_all_v().values():
+                    v.dx = 0
+                    v.dy = 0
+                fruchterman_reingold(g)
+            # layout.center_and_scale(g, 10, 10)
         elif len(vortex_with_no_point) > 0:
             frame = get_frame(self.graph)
             W = abs(frame[1] - frame[0])
