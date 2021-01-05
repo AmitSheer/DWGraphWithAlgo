@@ -126,7 +126,5 @@ class TestGraphAlgo(unittest.TestCase):
 
     def test_plot_graph(self):
         algo = GraphAlgo()
-        # algo.load_from_json('../data/A5_edited')
-        algo.load_from_json('../data/A3')
-        # algo.load_from_json('../data/T0.json')
+        algo.load_from_json('../data/A5')
         algo.plot_graph()
