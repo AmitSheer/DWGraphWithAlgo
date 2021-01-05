@@ -148,7 +148,8 @@ class GraphAlgo(GraphAlgoInterface):
     def reset(self):
         for node in list(self.graph.get_all_v().values()):
             node.set_dist(float('inf'))
-            node.set_visited(False)
+            node.set_visited_in(False)
+            node.set_visited_global(False)
             node.set_parent(None)
             node.set_type(-1)
             node.set_index(None)
