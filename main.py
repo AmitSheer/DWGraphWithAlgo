@@ -1,42 +1,42 @@
+import math
+import random
+import numpy as np
+from matplotlib import pyplot as plt
+from time import time
+import networkx as nx
 from src.DiGraph import DiGraph
+from src.GraphAlgo import GraphAlgo
 
-a = DiGraph()
-print(a.v_size())
-a.add_node(1)
-a.add_node(2)
-a.add_node(3)
-a.add_node(3)
-a.add_node(3)
-a.add_node(4)
-print(a.v_size())
-print(a.e_size())
-a.add_edge(1, 2, 5.5)
-a.add_edge(1, 3, 5.6)
-a.add_edge(2, 1, 5.6)
-a.add_edge(1, 4, 5)
-a.add_edge(1, 4, 5)
-a.add_edge(1, 4, 5)
-a.add_edge(1, 4, 5)
-a.add_edge(6, 4, 5)
-print('1mc:'+a.get_mc().__str__())
-print(a.e_size())
-a.remove_edge(1, 4)
-print('2mc:'+a.get_mc().__str__())
-print(a.e_size())
 
-a.remove_edge(1, 4)
-print('3mc:'+a.get_mc().__str__())
+def graph_random(seed: int, v_size: int, e_size: int):
+    g = DiGraph()
+    random.seed(seed)
+    pos = np.random.random(size=(v_size, 3))
+    for i in range(v_size):
+        g.add_node(i, (pos[i][0], pos[i][1], pos[i][2]))
+    edges = np.random.randint(1, v_size + 1, size=(e_size, 3))
+    for edge in edges:
+        g.add_edge(edge[0] - 1, edge[1] - 1, random.random())
+    return g
 
-print(a.e_size())
-a.add_edge(1, 4, 5)
-print('4mc:'+a.get_mc().__str__())
 
-print(a.e_size())
-print('5mc:'+a.get_mc().__str__())
+nodes: int = int(math.pow(10, 5))
+g = graph_random(1000, nodes, nodes * 3)
+algo = GraphAlgo(g)
+G = nx.DiGraph()
+g = algo.get_graph()
+for n in g.get_all_v().values():
+    G.add_node(n.get_key())
+for n in g.get_all_v():
+    for e, w in g.all_out_edges_of_node(n).items():
+        G.add_edge(n, e)
+t1 = time()
+scc = nx.strongly_connected_components(G)
+t2 = time()
+print(f'nx {t2 - t1}')
+t1 = time()
+a = algo.connected_components()
+t2 = time()
+print(f'my {t2 - t1}')
 
-a.remove_node(1)
-print('6mc:'+a.get_mc().__str__())
 
-print('asdasdada')
-print(a.e_size())
-print(a.v_size())

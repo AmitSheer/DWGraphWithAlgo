@@ -8,9 +8,11 @@ from src.GraphInterface import GraphInterface
 from src.Encoders.DiGraphEncoder import DiGraphEncoder
 from src.NodeData import NodeData
 from src.algorithms.Dijkstra import dijkstra
-from src.algorithms.Trajan import trajan
+from src.algorithms.Trajan import *
 from src.fruchterman_reingold import fruchterman_reingold
 from src import layout
+
+
 # from main import shit
 
 
@@ -100,6 +102,12 @@ class GraphAlgo(GraphAlgoInterface):
         nodes_path.reverse()
         return node.get_dist(), nodes_path
 
+    def _idlist_to_nodes(self, scc: List[List[int]]) -> List[List[NodeData]]:
+        sccList: List[List[NodeData]] = []
+        for _scc in scc:
+            sccList.append([self.graph.get_all_v().get(node) for node in _scc])
+        return sccList
+
     def connected_component(self, id1: int) -> list:
         """
         Finds the Strongly Connected Component(SCC) that node id1 is a part of.
@@ -107,7 +115,8 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list of nodes in the SCC
         """
         self.reset()
-        return trajan(self.graph, id1).pop()
+        scc = trajan(self.graph, id1)
+        return self._idlist_to_nodes([connections for connections in scc if connections.__contains__(id1)])[0]
 
     def connected_components(self) -> List[list]:
         """
@@ -115,7 +124,8 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list all SCC
         """
         self.reset()
-        return trajan(self.graph)
+        return self._idlist_to_nodes(trajan(self.graph))
+        # return check_dfs(self.graph)
 
     def plot_graph(self) -> None:
         """
