@@ -116,7 +116,9 @@ class GraphAlgo(GraphAlgoInterface):
         """
         self.reset()
         scc = trajan(self.graph, id1)
-        return self._idlist_to_nodes([connections for connections in scc if connections.__contains__(id1)])[0]
+        for c in scc:
+            if id1 in [a.get_key() for a in c]:
+                return c
 
     def connected_components(self) -> List[list]:
         """
@@ -124,8 +126,7 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list all SCC
         """
         self.reset()
-        return self._idlist_to_nodes(trajan(self.graph))
-        # return check_dfs(self.graph)
+        return trajan(self.graph)
 
     def plot_graph(self) -> None:
         """

@@ -97,13 +97,13 @@ class TestGraphAlgo(unittest.TestCase):
         self.graph.add_edge(3, 4, 1.1)
         algo = GraphAlgo(self.graph)
         scc: list = algo.connected_component(0)
-        self.assertEqual([NodeData(1), NodeData(0)], scc)
+        self.assertEqual([NodeData(0), NodeData(1)], scc)
         scc: list = algo.connected_component(1)
-        self.assertEqual([NodeData(0),NodeData(1)], scc)
+        self.assertEqual([NodeData(0), NodeData(1)], scc)
         scc: list = algo.connected_component(2)
         self.assertEqual([NodeData(2)], scc)
         scc: list = algo.connected_component(4)
-        self.assertEqual([NodeData(3),NodeData(4)], scc)
+        self.assertEqual([NodeData(3), NodeData(4)], scc)
 
     def test_connected_components(self):
         self.graph = DiGraph()
@@ -120,8 +120,8 @@ class TestGraphAlgo(unittest.TestCase):
         algo = GraphAlgo(self.graph)
         scc: list = algo.connected_components()
         self.assertTrue(scc.__contains__([NodeData(2)]))
-        self.assertTrue(scc.__contains__([NodeData(1), NodeData(0)]))
-        self.assertTrue(scc.__contains__([NodeData(4), NodeData(3)]))
+        self.assertTrue(scc.__contains__([NodeData(0), NodeData(1)]))
+        self.assertTrue(scc.__contains__([NodeData(3), NodeData(4)]))
 
     def test_plot_graph(self):
         algo = GraphAlgo()

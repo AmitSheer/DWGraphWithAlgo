@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from src import GraphInterface
 from src.NodeData import NodeData
@@ -8,6 +8,7 @@ __scc_found = set()
 index = 0
 
 
+# recursion version
 def _dfs(curr: NodeData, stack, graph: GraphInterface):
     global index
     curr.set_low_link(index)
@@ -34,9 +35,44 @@ def _dfs(curr: NodeData, stack, graph: GraphInterface):
         sccList.append(scc)
 
 
-#
-#
+# non recursion version
+def _dfs_non_recursive(graph: GraphInterface, node, low_link, ids):
+    global __scc_found, sccList, index
+    stack = [node]
+    scc: Dict[int, list] = {}
+    nodes = graph.get_all_v()
+    while stack:
+        node = stack[-1]
+        if node not in ids:
+            ids[node] = low_link[node] = index
+            scc[index] = [nodes[node]]
+            index += 1
+        recursive = True
+        # mimic the behavior of recursion by stopping run on edge when we find an edge to visit
+        for dest in graph.all_out_edges_of_node(node):
+            if dest not in ids:
+                stack.append(dest)
+                recursive = False
+                break
+        # if recursive is true it means we visited all reachable nodes from current head node
+        if recursive:
+            # update the low for current
+            low = low_link[node]
+            for dest in graph.all_out_edges_of_node(node):
+                if dest not in __scc_found:
+                    low_link[node] = min(low_link.__getitem__(node), low_link[dest])
+            stack.pop()
+            if low_link[node] == ids[node]:
+                sccList.append(scc[low_link[node]])
+                __scc_found.update([key.get_key() for key in scc[low_link[node]]])
+            else:
+                if low_link[node] not in scc:
+                    scc[low_link[node]] = []
+                scc[low_link[node]].extend(scc[low])
+                for key in scc[low]:
+                    low_link[key.get_key()] = low_link[node]
 
+# finds scc by flipping all edges directions
 def _travers(curr: int, graph: GraphInterface):
     check_stack = [curr]
     visited = set()
@@ -62,54 +98,7 @@ def _travers(curr: int, graph: GraphInterface):
     sccList.append(scc)
 
 
-#
-def check_dfs(graph: GraphInterface):
-    _sccList = []
-    _scc_found = set()
-    low_link = {}
-    ids = {}
-    scc_stack = []
-    index = 0
-    for node in graph.get_all_v():
-        if node not in _scc_found:
-            stack = [node]
-            while len(stack):
-                # start building the stack to run on
-                n = stack[len(stack) - 1]
-                if n not in ids:
-                    index += 1
-                    ids[n] = index
-                # done represent if we found a node that is already part of an scc in check
-                done = True
-                for dest in graph.all_out_edges_of_node(n):
-                    if dest not in ids:
-                        stack.append(dest)
-                        done = False
-                        break
-                if done:
-                    low_link[n] = ids[n]
-                    # now we start backtracking from current node back
-                    for back in graph.all_out_edges_of_node(n):
-                        if back not in _scc_found:
-                            if ids[back] > ids[n]:
-                                low_link[n] = min(low_link.__getitem__(n), low_link[back])
-                            else:
-                                low_link[n] = min(low_link[n], ids[back])
-                    # get rid of the n element in stack
-                    stack.pop()
-                    # meaning we are at the starting point
-                    if low_link[n] == ids[n]:
-                        scc = [n]
-                        # get the end of the list
-                        while scc_stack and ids[scc_stack[len(scc_stack) - 1]] > ids[n]:
-                            scc.append(scc_stack.pop())
-                        _scc_found.update(scc)
-                        _sccList.append(scc)
-                    else:
-                        scc_stack.append(n)
-    return _sccList
-
-
+# taken and tried from a website on the internet
 def non_recursive(graph: GraphInterface, index, node: int = None):
     global __scc_found, sccList
     ids = {}
@@ -126,7 +115,7 @@ def non_recursive(graph: GraphInterface, index, node: int = None):
         # pop the last item in list, mimic  stack behavior
         del work[-1]
         if nxt == 0:
-            low_link[curr] =index
+            low_link[curr] = index
             ids[curr] = index
             index += 1
             stack.append(curr)
@@ -144,8 +133,7 @@ def non_recursive(graph: GraphInterface, index, node: int = None):
         if ids[curr] == low_link[curr]:
             scc = []
             while len(stack):
-                dest = stack[-1]
-                del stack[-1]
+                dest = stack.pop()
                 on_stack[dest] = False
                 scc.append(dest)
                 if dest == curr:
@@ -156,16 +144,6 @@ def non_recursive(graph: GraphInterface, index, node: int = None):
             w = curr
             curr, _ = work[-1]
             low_link[curr] = min(low_link[curr], low_link[w])
-
-        # n = stack[len(stack) - 1]
-        # if n not in ids:
-        #     ids[node] = index
-        #     index += 1
-        # recursion = False
-        # for dest in graph.all_out_edges_of_node(n):
-        #     # if not in ids means not visited
-        #     if dest not in ids:
-        #         stack.append(dest)
 
 
 def trajan(graph: GraphInterface, node_id: int = None) -> List[list]:
@@ -179,10 +157,11 @@ def trajan(graph: GraphInterface, node_id: int = None) -> List[list]:
     if node_id is None:
         for node in graph.get_all_v():
             if node not in __scc_found:
-                _travers(node, graph)
+                _dfs_non_recursive(graph, node, low_link, ids)
+                # _travers(node, graph)
                 # non_recursive(graph, index, node)
                 # _dfs(node, stack, graph)
     else:
         # _dfs(graph.get_all_v(graph), stack, graph)
-        non_recursive(graph,  index, node_id)
+        _dfs_non_recursive(graph, node_id, low_link, ids)
     return sccList
