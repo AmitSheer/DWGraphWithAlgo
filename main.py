@@ -1,6 +1,5 @@
 import math
 import random
-import numpy as np
 from time import time
 import networkx as nx
 from src.DiGraph import DiGraph
@@ -11,7 +10,6 @@ def graph_random(seed: int, v_size: int, e_size: int):
     g = DiGraph()
     random.seed(seed)
     pos = [(random.random(), random.random(), random.random())] * v_size
-    # np.random.random(size=(v_size, 3))
     for i in range(v_size):
         g.add_node(i, (pos[i][0], pos[i][1], pos[i][2]))
     while g.e_size() != e_size:
@@ -40,20 +38,27 @@ def graph_random(seed: int, v_size: int, e_size: int):
 # scc = nx.strongly_connected_components(G)
 # t2 = time()
 # print(f'nx {t2 - t1}')
-for i in range(1, 2):
-    nodes: int = int(math.pow(10, 6))
-    g = graph_random(1000, nodes, nodes * 3)
-    algo = GraphAlgo(g)
-    file_name = f"graph_with_10pow{6}.json"
-    # algo.save_to_json(file_name)
-    if algo.save_to_json(file_name) is False:
-        print(file_name)
+# for i in range(1, 2):
+#     nodes: int = int(math.pow(10, 6))
+#     g = graph_random(1000, nodes, nodes * 3)
+#     algo = GraphAlgo(g)
+#     file_name = f"graph_with_10pow{6}.json"
+#     # algo.save_to_json(file_name)
+#     if algo.save_to_json(file_name) is False:
+#         print(file_name)
 
 # nodes: int = int(math.pow(10, 3))
 # g = graph_random(1000, nodes, nodes * 3)
-algo = GraphAlgo()
 # algo = GraphAlgo()
-algo.load_from_json('sample_graphs/graph_with_10pow5.json')
+algo = GraphAlgo()
+algo.load_from_json('Graphs_no_pos/G_10_80_0.json')
+algo.load_from_json('Graphs_no_pos/G_100_800_0.json')
+algo.load_from_json('Graphs_no_pos/G_1000_8000_0.json')
+algo.load_from_json('Graphs_no_pos/G_10000_80000_0.json')
+algo.load_from_json('Graphs_no_pos/G_20000_160000_0.json')
+algo.load_from_json('Graphs_no_pos/G_30000_240000_0.json')
+
+
 G = nx.DiGraph()
 g = algo.get_graph()
 for n in g.get_all_v().values():
