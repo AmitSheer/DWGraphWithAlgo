@@ -1,16 +1,14 @@
-import json
 from random import random
-from typing import List, IO
-from src.GraphPloter import *
+from typing import IO
+
+from src import layout
 from src.DiGraph import DiGraph
+from src.Encoders.NodeDataEncoder import *
 from src.GraphAlgoInterface import GraphAlgoInterface
-from src.GraphInterface import GraphInterface
-from src.Encoders.DiGraphEncoder import DiGraphEncoder
-from src.NodeData import NodeData
+from src.GraphPloter import *
 from src.algorithms.Dijkstra import dijkstra
 from src.algorithms.Trajan import *
 from src.fruchterman_reingold import fruchterman_reingold
-from src import layout
 
 
 # from main import shit
@@ -62,7 +60,15 @@ class GraphAlgo(GraphAlgoInterface):
     def save_to_json(self, file_name: str) -> bool:
         try:
             with open(file_name, 'w') as json_file:
-                json.dump(self.graph, json_file, cls=DiGraphEncoder)
+                json_file.write('{"Nodes": ')
+                json.dump(Data(self.graph.get_all_v().values()), json_file, cls=NodeDataEncoder)
+                json_file.write(', "Edges": ')
+                edges = [{'src': node_id, 'dest': int(dest), 'w': w} for node_id in self.graph.get_all_v() for dest, w in self.graph.all_out_edges_of_node(node_id).items()]
+                json.dump(edges, json_file)
+                # for node_id in self.graph.get_all_v():
+                #     for dest, w in self.graph.all_out_edges_of_node(node_id).items():
+                #         json.dump({'src': node_id, 'dest': int(dest), 'w': float(w)}, json_file)
+                json_file.write('}')
                 return True
         except:
             return False
@@ -101,12 +107,6 @@ class GraphAlgo(GraphAlgoInterface):
         node = self.graph.get_all_v().get(id2)
         nodes_path.reverse()
         return node.get_dist(), nodes_path
-
-    def _idlist_to_nodes(self, scc: List[List[int]]) -> List[List[NodeData]]:
-        sccList: List[List[NodeData]] = []
-        for _scc in scc:
-            sccList.append([self.graph.get_all_v().get(node) for node in _scc])
-        return sccList
 
     def connected_component(self, id1: int) -> list:
         """
@@ -159,8 +159,7 @@ class GraphAlgo(GraphAlgoInterface):
     def reset(self):
         for node in list(self.graph.get_all_v().values()):
             node.set_dist(float('inf'))
-            node.set_visited_in(False)
-            node.set_visited_global(False)
+            node.set_visited(False)
             node.set_parent(None)
             node.set_type(-1)
             node.set_index(None)

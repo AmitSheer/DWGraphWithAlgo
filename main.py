@@ -40,11 +40,20 @@ def graph_random(seed: int, v_size: int, e_size: int):
 # scc = nx.strongly_connected_components(G)
 # t2 = time()
 # print(f'nx {t2 - t1}')
-nodes: int = int(math.pow(10, 5))
-g = graph_random(1000, nodes, nodes * 3)
-algo = GraphAlgo(g)
+for i in range(1, 2):
+    nodes: int = int(math.pow(10, 6))
+    g = graph_random(1000, nodes, nodes * 3)
+    algo = GraphAlgo(g)
+    file_name = f"graph_with_10pow{6}.json"
+    # algo.save_to_json(file_name)
+    if algo.save_to_json(file_name) is False:
+        print(file_name)
+
+# nodes: int = int(math.pow(10, 3))
+# g = graph_random(1000, nodes, nodes * 3)
+algo = GraphAlgo()
 # algo = GraphAlgo()
-# algo.load_from_json('test1.json')
+algo.load_from_json('sample_graphs/graph_with_10pow5.json')
 G = nx.DiGraph()
 g = algo.get_graph()
 for n in g.get_all_v().values():
@@ -56,28 +65,31 @@ t1 = time()
 scc = nx.strongly_connected_components(G)
 t2 = time()
 print(f'nx {t2 - t1}')
-# print(scc)
-# algo.plot_graph()
 t1 = time()
 a = algo.connected_components()
 t2 = time()
 print(f'my {t2 - t1}')
-# print(a.__eq__(scc))
-# flag = True
+a_scc = []
+for s in a:
+    a_scc.append(sorted([node.get_key() for node in s]))
 for c in scc:
-    d = [g.get_all_v()[n] for n in c]
-    # print(d)
-    flag = False
-    for n in a:
-        if n.__contains__(d[0]):
-            flag = True
-            for node in d:
-                if n.__contains__(node) is False:
-                    flag = False
-                    print(False)
-                    break
-    if flag is False:
+    if sorted(list(c)) not in a_scc:
+        print(False)
         break
+# for c in scc:
+#     d = [g.get_all_v()[n] for n in c]
+#     # print(d)
+#     flag = False
+#     for n in a:
+#         if n.__contains__(d[0]):
+#             flag = True
+#             for node in d:
+#                 if n.__contains__(node) is False:
+#                     flag = False
+#                     print(False)
+#                     break
+#     if flag is False:
+#         break
 
 # print(a)
 # print(scc)

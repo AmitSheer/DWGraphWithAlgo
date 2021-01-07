@@ -1,6 +1,6 @@
 import unittest
+
 from src.DiGraph import DiGraph
-from src.EdgeData import EdgeData
 from src.NodeData import NodeData
 
 

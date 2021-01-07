@@ -7,16 +7,16 @@ from src.NodeData import NodeData
 def dijkstra(start: NodeData, key_to_find: int, graph: GraphInterface):
     start.set_dist(0)
     # counter for how many visited
-    visited = 0
+    visited = set()
 
     # using tuple here so the values won't change
     unvisited_queue = [(start.get_dist(), start)]
     heapq.heapify(unvisited_queue)
 
-    while len(unvisited_queue) and visited != graph.v_size():
+    while len(unvisited_queue) and len(visited) != graph.v_size():
         current_node: NodeData = heapq.heappop(unvisited_queue)[1]
-        if current_node.get_visited_in() is False:
-            current_node.set_visited_in(True)
+        if current_node.get_key() not in visited:
+            visited.add(current_node.get_key())
             if key_to_find == current_node.get_key():
                 return
             for dest, w in graph.all_out_edges_of_node(current_node.get_key()).items():

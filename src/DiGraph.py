@@ -1,26 +1,20 @@
-import json
+from typing import Dict
 
 from src.GraphInterface import GraphInterface
-from src.EdgeData import EdgeData
 from src.NodeData import NodeData
-from src.Encoders import EdgeDataEncoder, NodeDataEncoder
-from typing import Dict, List
 
 
 class DiGraph(GraphInterface):
     def __init__(self):
         super()
         self.__nodes: Dict[int, NodeData] = dict()
-        self.__edges: Dict[int, Dict[int, EdgeData]] = dict()
-        self.__edges_into: Dict[int, Dict[int, EdgeData]] = dict()
+        self.__edges: Dict[int, Dict[int, float]] = dict()
+        self.__edges_into: Dict[int, Dict[int, float]] = dict()
         self.__edges_size = 0
         self.__mc = 0
 
     def get_node(self, key: int) -> NodeData:
         return self.__nodes.get(key)
-
-    def get_edges(self) -> List[EdgeData]:
-        return [edge for node_edges in self.__edges.values() for edge in node_edges.values()]
 
     def v_size(self) -> int:
         return len(self.__nodes)
@@ -32,16 +26,10 @@ class DiGraph(GraphInterface):
         return self.__nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        edges: Dict[int, float] = {}
-        for edge in self.__edges_into.get(id1).values():
-            edges.__setitem__(edge.get_src(), edge.get_w())
-        return edges
+        return self.__edges_into.get(id1)
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        edges: Dict[int, float] = {}
-        for edge in self.__edges.get(id1).values():
-            edges.__setitem__(edge.get_dest(), edge.get_w())
-        return edges
+        return self.__edges.get(id1)
 
     def get_mc(self) -> int:
         return self.__mc
@@ -59,15 +47,14 @@ class DiGraph(GraphInterface):
                 self.__nodes.get(id1) is not None and \
                 self.__nodes.get(id2) is not None and \
                 id1 != id2:
-            e = EdgeData(id1, id2, weight)
             if self.__edges_into.get(id2).get(id1) is None:
                 self.__edges_size += 1
             else:
-                if self.__edges.get(id1).get(id2).get_w() == weight:
+                if self.__edges.get(id1).get(id2) == weight:
                     return True
             self.__mc += 1
-            self.__edges.get(id1).__setitem__(id2, e)
-            self.__edges_into.get(id2).__setitem__(id1, e)
+            self.__edges.get(id1).__setitem__(id2, weight)
+            self.__edges_into.get(id2).__setitem__(id1, weight)
             return True
         return False
 
@@ -76,15 +63,6 @@ class DiGraph(GraphInterface):
             self.__nodes.__setitem__(node_id, NodeData(node_id, pos))
             self.__edges.__setitem__(node_id, dict())
             self.__edges_into.__setitem__(node_id, dict())
-            self.__mc += 1
-            return True
-        return False
-
-    def add_node_as_nodedata(self, node: NodeData) -> bool:
-        if self.__nodes.get(node.key) is None:
-            self.__nodes.__setitem__(node.key, node)
-            self.__edges.__setitem__(node.key, dict())
-            self.__edges_into.__setitem__(node.key, dict())
             self.__mc += 1
             return True
         return False

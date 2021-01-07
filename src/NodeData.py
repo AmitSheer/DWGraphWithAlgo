@@ -15,8 +15,7 @@ class NodeData:
         self.__parent = None
         self.__type = -1
         self.__dist = float('inf')
-        self.__visited_in = False
-        self.__visited_global = False
+        self.__visited = False
         self.__index = None
         self.__low_link = None
 
@@ -55,17 +54,11 @@ class NodeData:
     def set_dist(self, dist: float):
         self.__dist = dist
 
-    def get_visited_in(self) -> bool:
-        return self.__visited_in
+    def get_visited(self) -> bool:
+        return self.__visited
 
-    def set_visited_in(self, visited: bool):
-        self.__visited_in = visited
-
-    def get_visited_global(self) -> bool:
-        return self.__visited_global
-
-    def set_visited_global(self, visited: bool):
-        self.__visited_global = visited
+    def set_visited(self, visited: bool):
+        self.__visited = visited
 
     def get_index(self) -> int:
         return self.__index
