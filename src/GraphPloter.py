@@ -1,4 +1,5 @@
 import math
+import threading
 
 import matplotlib.pyplot as plt
 
@@ -37,7 +38,7 @@ def plotter(graph: GraphInterface):
         frame = (-0.1, 1.1, -0.1, 1.1)
     # dist = math.sqrt(math.pow(frame[0] - frame[1], 2) + math.pow(frame[2] - frame[3], 2))
     plt.axis([frame[0], frame[1], frame[2], frame[3]])
-    put_edges(graph)
     put_nodes(graph)
+    put_edges(graph)
     plt.autoscale(True, 'both')
     plt.show()

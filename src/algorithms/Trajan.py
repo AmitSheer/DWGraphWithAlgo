@@ -73,7 +73,7 @@ def _dfs_non_recursive(graph: GraphInterface, node, low_link, ids):
                     low_link[key.get_key()] = low_link[node]
 
 # finds scc by flipping all edges directions
-def _travers(curr: int, graph: GraphInterface):
+def kosaraju(curr: int, graph: GraphInterface):
     check_stack = [curr]
     visited = set()
     visited.add(curr)
@@ -94,8 +94,7 @@ def _travers(curr: int, graph: GraphInterface):
                 index += 1
                 check_stack.append(dest)
                 scc.append(dest)
-    __scc_found.update(scc)
-    sccList.append(scc)
+    return scc
 
 
 # taken and tried from a website on the internet
@@ -146,22 +145,14 @@ def non_recursive(graph: GraphInterface, index, node: int = None):
             low_link[curr] = min(low_link[curr], low_link[w])
 
 
-def trajan(graph: GraphInterface, node_id: int = None) -> List[list]:
+def trajan(graph: GraphInterface) -> List[list]:
     global sccList, __scc_found, index
     index = 0
     low_link = {}
     ids = {}
     __scc_found = set()
     sccList = []
-    stack = []
-    if node_id is None:
-        for node in graph.get_all_v():
-            if node not in __scc_found:
-                _dfs_non_recursive(graph, node, low_link, ids)
-                # _travers(node, graph)
-                # non_recursive(graph, index, node)
-                # _dfs(node, stack, graph)
-    else:
-        # _dfs(graph.get_all_v(graph), stack, graph)
-        _dfs_non_recursive(graph, node_id, low_link, ids)
+    for node in graph.get_all_v():
+        if node not in __scc_found:
+            _dfs_non_recursive(graph, node, low_link, ids)
     return sccList

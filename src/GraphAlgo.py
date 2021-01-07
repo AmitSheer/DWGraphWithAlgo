@@ -63,7 +63,8 @@ class GraphAlgo(GraphAlgoInterface):
                 json_file.write('{"Nodes": ')
                 json.dump(Data(self.graph.get_all_v().values()), json_file, cls=NodeDataEncoder)
                 json_file.write(', "Edges": ')
-                edges = [{'src': node_id, 'dest': int(dest), 'w': w} for node_id in self.graph.get_all_v() for dest, w in self.graph.all_out_edges_of_node(node_id).items()]
+                edges = [{'src': node_id, 'dest': int(dest), 'w': w} for node_id in self.graph.get_all_v() for dest, w
+                         in self.graph.all_out_edges_of_node(node_id).items()]
                 json.dump(edges, json_file)
                 # for node_id in self.graph.get_all_v():
                 #     for dest, w in self.graph.all_out_edges_of_node(node_id).items():
@@ -100,12 +101,14 @@ class GraphAlgo(GraphAlgoInterface):
         dijkstra(self.graph.get_all_v().get(id1), id2, self.graph)
         nodes_path = []
         node: NodeData = self.graph.get_all_v().get(id2)
-        # nodes_path.append(node.get_key())
+        nodes_path.append(node.get_key())
         while node.get_parent() is not None:
             nodes_path.append(node.get_parent().get_key())
             node = node.get_parent()
         node = self.graph.get_all_v().get(id2)
         nodes_path.reverse()
+        if len(nodes_path) == 1:
+            return node.get_dist(), []
         return node.get_dist(), nodes_path
 
     def connected_component(self, id1: int) -> list:
@@ -115,10 +118,7 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list of nodes in the SCC
         """
         self.reset()
-        scc = trajan(self.graph, id1)
-        for c in scc:
-            if id1 in [a.get_key() for a in c]:
-                return c
+        return [self.graph.get_all_v().get(key) for key in kosaraju(id1, self.graph)]
 
     def connected_components(self) -> List[list]:
         """
@@ -159,8 +159,4 @@ class GraphAlgo(GraphAlgoInterface):
     def reset(self):
         for node in list(self.graph.get_all_v().values()):
             node.set_dist(float('inf'))
-            node.set_visited(False)
             node.set_parent(None)
-            node.set_type(-1)
-            node.set_index(None)
-            node.set_low_link(None)

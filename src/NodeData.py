@@ -10,14 +10,9 @@ class NodeData:
         # params for algorithms
         self.dx = 0
         self.dy = 0
-        self.ddx = 0
-        self.ddy = 0
         self.__parent = None
         self.__type = -1
         self.__dist = float('inf')
-        self.__visited = False
-        self.__index = None
-        self.__low_link = None
 
     #  returns the Location object
     def get_location(self) -> Location:
@@ -42,35 +37,11 @@ class NodeData:
     def set_parent(self, parent):
         self.__parent = parent
 
-    def get_type(self) -> int:
-        return self.__type
-
-    def set_type(self, type: int):
-        self.__type = type
-
     def get_dist(self) -> float:
         return self.__dist
 
     def set_dist(self, dist: float):
         self.__dist = dist
-
-    def get_visited(self) -> bool:
-        return self.__visited
-
-    def set_visited(self, visited: bool):
-        self.__visited = visited
-
-    def get_index(self) -> int:
-        return self.__index
-
-    def set_index(self, index: int):
-        self.__index = index
-
-    def get_low_link(self) -> int:
-        return self.__low_link
-
-    def set_low_link(self, low_link: int):
-        self.__low_link = low_link
 
     def __repr__(self):
         if self.__pos is not None:
