@@ -27,4 +27,6 @@ The solution to the four problems respectively:
 ![Dijkstra_Animation](https://user-images.githubusercontent.com/26150015/104007154-2d3d0600-51b0-11eb-8810-f781918ff473.gif)\
 2+3. strongly connected component and strongly connected components - implement and use [Tarjan's strongly connected components algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)\
 ![Tarjan's_Algorithm_Animation](https://user-images.githubusercontent.com/26150015/104006689-7fc9f280-51af-11eb-8ed0-85d8c7c79bde.gif)
-4. visualize graph - implement drawing method using [Marplotlib](https://matplotlib.org/index.html)
+4. visualize graph - implement drawing method using [Marplotlib](https://matplotlib.org/index.html)\
+![Graph](https://user-images.githubusercontent.com/26150015/104019866-f45b5c00-51c4-11eb-9c59-84f0dd66ec5a.PNG)
+
