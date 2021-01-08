@@ -1,7 +1,9 @@
 import heapq
+from typing import List
 
 from src import GraphInterface
 from src.NodeData import NodeData
+import numpy as np
 
 
 def dijkstra(start: NodeData, key_to_find: int, graph: GraphInterface):
@@ -26,3 +28,17 @@ def dijkstra(start: NodeData, key_to_find: int, graph: GraphInterface):
                     unvisited_queue.append(
                         (graph.get_all_v().get(dest).get_dist(), graph.get_all_v().get(dest)))
             heapq.heapify(unvisited_queue)
+
+
+def dijkstra_with_arrays(graph: GraphInterface, start: NodeData, key_to_find: int, ):
+    Q: set[int] = set()
+    dist: List[float] = []
+    prev: List = []
+    for v in graph.get_all_v():
+        dist[v] = float('inf')
+        prev[v] = None
+        Q.add(v)
+    dist[start.get_key()] = 0
+    while Q:
+        u = np.min(dist)
+

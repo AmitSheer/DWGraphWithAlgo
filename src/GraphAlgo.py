@@ -44,7 +44,8 @@ class GraphAlgo(GraphAlgoInterface):
                     id = node['id']
                     try:
                         pos = node['pos']
-                        graph.add_node(id, pos)
+                        pos_tuple = (float(pos.split(',')[0]), float(pos.split(',')[1]), float(pos.split(',')[2]))
+                        graph.add_node(id, pos_tuple)
                     except:
                         graph.add_node(id, None)
                 except:
@@ -118,7 +119,10 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list of nodes in the SCC
         """
         self.reset()
-        return [self.graph.get_all_v().get(key) for key in kosaraju(id1, self.graph)]
+        scc = trajan(self.graph, id1)
+        for c in scc:
+            if id1 in [a.get_key() for a in c]:
+                return c
 
     def connected_components(self) -> List[list]:
         """
@@ -136,9 +140,9 @@ class GraphAlgo(GraphAlgoInterface):
         @return: None
         """
         g: DiGraph = self.copy_graph()
-        vortex_with_no_point = [node for node in g.get_all_v().values()]
-        # vortex_with_no_point = [node for node in g.get_all_v().values() if
-        #                         node.get_pos() is None or node.get_pos() == (None, None, None)]
+        # vortex_with_no_point = [node for node in g.get_all_v().values()]
+        vortex_with_no_point = [node for node in g.get_all_v().values() if
+                                node.get_pos() is None or node.get_pos() == (None, None, None)]
         if len(vortex_with_no_point) == self.graph.v_size() and g.v_size() > 0:
             layout.circle(g)
             for i in range(50):
@@ -152,7 +156,7 @@ class GraphAlgo(GraphAlgoInterface):
             W = abs(frame[1] - frame[0])
             L = abs(frame[3] - frame[2])
             for node in vortex_with_no_point:
-                n = g.get_node(node.get_key())
+                n = g.get_all_v().get(node.get_key())
                 n.set_pos((frame[0] + W * random(), frame[2] + L * random(), 0))
         plotter(g)
 

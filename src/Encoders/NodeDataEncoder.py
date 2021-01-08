@@ -37,7 +37,7 @@ class NodeDataEncoder(json.JSONEncoder):
             if obj.get_pos() is not None:
                 return {
                     'id': obj.get_key(),
-                    'pos': obj.get_location().__str__()
+                    'pos': '"'+obj.get_pos()[0].__str__()+','+obj.get_pos()[1].__str__()+','+obj.get_pos()[2].__str__()+'"'
                 }
             else:
                 return {

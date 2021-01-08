@@ -13,9 +13,6 @@ class DiGraph(GraphInterface):
         self.__edges_size = 0
         self.__mc = 0
 
-    def get_node(self, key: int) -> NodeData:
-        return self.__nodes.get(key)
-
     def v_size(self) -> int:
         return len(self.__nodes)
 

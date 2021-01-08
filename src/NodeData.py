@@ -1,29 +1,25 @@
+import math
+
 from src.Location import Location
 
 
 class NodeData:
 
-    def __init__(self, key: int, pos: () = None):
+    def __init__(self, key: int, pos: tuple = None):
         self.__key: int = key
-        self.__pos: Location = Location()
-        self.__pos.set_point(pos)
+        self.__pos = pos
         # params for algorithms
         self.dx = 0
         self.dy = 0
         self.__parent = None
-        self.__type = -1
         self.__dist = float('inf')
-
-    #  returns the Location object
-    def get_location(self) -> Location:
-        return self.__pos
 
     # return the location as tuple of (x,y,z)
     def get_pos(self) -> tuple:
-        return self.__pos.get_point()
+        return self.__pos
 
-    def set_pos(self, point):
-        self.__pos.set_point(point)
+    def set_pos(self, point: tuple):
+        self.__pos = point
 
     def get_key(self) -> int:
         return self.__key
@@ -42,6 +38,12 @@ class NodeData:
 
     def set_dist(self, dist: float):
         self.__dist = dist
+
+    def distance(self, point) -> float:
+        dx = self.__pos[0] - point[0]
+        dy = self.__pos[1] - point[1]
+        dz = self.__pos[2] - point[2]
+        return math.sqrt(dx * dx + dy * dy+dz*dz)
 
     def __repr__(self):
         if self.__pos is not None:

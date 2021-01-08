@@ -17,9 +17,9 @@ def put_edges(graph: GraphInterface):
             plt.arrow(node.get_pos()[0], node.get_pos()[1],
                       graph.get_all_v().get(dest).get_pos()[0] - node.get_pos()[0],
                       graph.get_all_v().get(dest).get_pos()[1] - node.get_pos()[1],
-                      width=node.get_location().distance(graph.get_all_v().get(dest).get_location()) / 500,
-                      head_width=3 * node.get_location().distance(graph.get_all_v().get(dest).get_location()) / 100,
-                      head_length=6 * node.get_location().distance(graph.get_all_v().get(dest).get_location()) / 100,
+                      width=node.distance(graph.get_all_v().get(dest).get_pos()) / 500,
+                      head_width=3 * node.distance(graph.get_all_v().get(dest).get_pos()) / 100,
+                      head_length=6 * node.distance(graph.get_all_v().get(dest).get_pos()) / 100,
                       facecolor='black',
                       length_includes_head=True)
 
