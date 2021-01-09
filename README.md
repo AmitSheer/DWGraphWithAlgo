@@ -30,3 +30,6 @@ The solution to the four problems respectively:
 4. visualize graph - implement drawing method using [Marplotlib](https://matplotlib.org/index.html)\
 ![Graph](https://user-images.githubusercontent.com/26150015/104019866-f45b5c00-51c4-11eb-9c59-84f0dd66ec5a.PNG)
 
+## Comparision of run times
+![Python_results_Graph](https://user-images.githubusercontent.com/26150015/104109103-1a6f2200-52d3-11eb-82e7-e73c1590e937.png)
+
