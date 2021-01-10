@@ -13,6 +13,7 @@ def fruchterman_reingold(g: GraphInterface):
     # push the two nodes from each other
     nodes = []
     for v in g.get_all_v().values():
+        # Repulsion Force
         for u in g.get_all_v().values():
             if v != u:
                 delta = [v.get_pos()[0] - u.get_pos()[0], v.get_pos()[1] - u.get_pos()[1]]
@@ -23,6 +24,7 @@ def fruchterman_reingold(g: GraphInterface):
                     u.dx -= delta[0] / dist * rep
                     v.dy += delta[1] / dist * rep
                     u.dy -= delta[1] / dist * rep
+        #  Attraction Force
         for e in g.all_out_edges_of_node(v.get_key()):
             u = g.get_all_v().get(e)
             delta = [v.get_pos()[0] - u.get_pos()[0], v.get_pos()[1] - u.get_pos()[1]]

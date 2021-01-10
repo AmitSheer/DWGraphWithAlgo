@@ -17,18 +17,17 @@ from src.fruchterman_reingold import fruchterman_reingold
 class GraphAlgo(GraphAlgoInterface):
     def __init__(self, graph: GraphInterface = None):
         super()
-        self.sccList: List[list] = []
-        self.graph = graph
+        self.__graph = graph
 
     def get_graph(self) -> GraphInterface:
-        return self.graph
+        return self.__graph
 
     def copy_graph(self) -> DiGraph:
         g = DiGraph()
-        for node in self.graph.get_all_v().values():
+        for node in self.__graph.get_all_v().values():
             g.add_node(node.get_key(), node.get_pos())
-        for node in self.graph.get_all_v():
-            for key, w in self.graph.all_out_edges_of_node(node).items():
+        for node in self.__graph.get_all_v():
+            for key, w in self.__graph.all_out_edges_of_node(node).items():
                 g.add_edge(node, key, w)
         return g
 
@@ -52,7 +51,7 @@ class GraphAlgo(GraphAlgoInterface):
                     return False
             for edge in j['Edges']:
                 graph.add_edge(edge['src'], edge['dest'], edge['w'])
-            self.graph = graph
+            self.__graph = graph
             fs.close()
             return True
         except:
@@ -62,10 +61,10 @@ class GraphAlgo(GraphAlgoInterface):
         try:
             with open(file_name, 'w') as json_file:
                 json_file.write('{"Nodes": ')
-                json.dump(Data(self.graph.get_all_v().values()), json_file, cls=NodeDataEncoder)
+                json.dump(Data(self.__graph.get_all_v().values()), json_file, cls=NodeDataEncoder)
                 json_file.write(', "Edges": ')
-                edges = [{'src': node_id, 'dest': int(dest), 'w': w} for node_id in self.graph.get_all_v() for dest, w
-                         in self.graph.all_out_edges_of_node(node_id).items()]
+                edges = [{'src': node_id, 'dest': int(dest), 'w': w} for node_id in self.__graph.get_all_v() for dest, w
+                         in self.__graph.all_out_edges_of_node(node_id).items()]
                 json.dump(edges, json_file)
                 # for node_id in self.graph.get_all_v():
                 #     for dest, w in self.graph.all_out_edges_of_node(node_id).items():
@@ -99,14 +98,15 @@ class GraphAlgo(GraphAlgoInterface):
         https://en.wikipedia.org/wiki/Dijkstra's_algorithm
         """
         self.reset()
-        dijkstra(self.graph.get_all_v().get(id1), id2, self.graph)
+        dijkstra(self.__graph.get_all_v().get(id1), id2, self.__graph)
         nodes_path = []
-        node: NodeData = self.graph.get_all_v().get(id2)
-        nodes_path.append(node.get_key())
-        while node.get_parent() is not None:
-            nodes_path.append(node.get_parent().get_key())
-            node = node.get_parent()
-        node = self.graph.get_all_v().get(id2)
+        # node: NodeData = self.__graph.get_all_v().get(id2)
+        nodes_path.append(id2)
+        node = id2
+        while self.__graph.get_all_v().get(node).get_parent() is not None:
+            nodes_path.append(self.__graph.get_all_v().get(node).get_parent())
+            node = self.__graph.get_all_v().get(node).get_parent()
+        node = self.__graph.get_all_v().get(id2)
         nodes_path.reverse()
         if len(nodes_path) == 1:
             return node.get_dist(), []
@@ -119,7 +119,7 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list of nodes in the SCC
         """
         self.reset()
-        scc = trajan(self.graph, id1)
+        scc = trajan(self.__graph, id1)
         for c in scc:
             if id1 in [a.get_key() for a in c]:
                 return c
@@ -130,7 +130,7 @@ class GraphAlgo(GraphAlgoInterface):
         @return: The list all SCC
         """
         self.reset()
-        return trajan(self.graph)
+        return trajan(self.__graph)
 
     def plot_graph(self) -> None:
         """
@@ -143,7 +143,7 @@ class GraphAlgo(GraphAlgoInterface):
         # vortex_with_no_point = [node for node in g.get_all_v().values()]
         vortex_with_no_point = [node for node in g.get_all_v().values() if
                                 node.get_pos() is None or node.get_pos() == (None, None, None)]
-        if len(vortex_with_no_point) == self.graph.v_size() and g.v_size() > 0:
+        if len(vortex_with_no_point) == self.__graph.v_size() and g.v_size() > 0:
             layout.circle(g)
             for i in range(50):
                 for v in g.get_all_v().values():
@@ -152,7 +152,7 @@ class GraphAlgo(GraphAlgoInterface):
                 fruchterman_reingold(g)
             # layout.center_and_scale(g, 10, 10)
         elif len(vortex_with_no_point) > 0:
-            frame = get_frame(self.graph)
+            frame = get_frame(self.__graph)
             W = abs(frame[1] - frame[0])
             L = abs(frame[3] - frame[2])
             for node in vortex_with_no_point:
@@ -161,6 +161,6 @@ class GraphAlgo(GraphAlgoInterface):
         plotter(g)
 
     def reset(self):
-        for node in list(self.graph.get_all_v().values()):
+        for node in list(self.__graph.get_all_v().values()):
             node.set_dist(float('inf'))
             node.set_parent(None)

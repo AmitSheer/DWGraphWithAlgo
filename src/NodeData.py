@@ -1,7 +1,5 @@
 import math
 
-from src.Location import Location
-
 
 class NodeData:
 

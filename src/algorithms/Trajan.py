@@ -99,6 +99,7 @@ def kosaraju(curr: int, graph: GraphInterface):
 
 
 # taken and tried from a website on the internet
+# NOT USED IN THE ALGORITHM BECAUSE OF SLOW RUNTIME
 def non_recursive(graph: GraphInterface, index, node: int = None):
     global __scc_found, sccList
     ids = {}
