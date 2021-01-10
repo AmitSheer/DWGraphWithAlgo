@@ -1,4 +1,5 @@
 import heapq
+import operator
 from typing import List
 
 from src import GraphInterface
@@ -30,15 +31,37 @@ def dijkstra(start: NodeData, key_to_find: int, graph: GraphInterface):
             heapq.heapify(unvisited_queue)
 
 
-def dijkstra_with_arrays(graph: GraphInterface, start: NodeData, key_to_find: int, ):
-    Q: set[int] = set()
-    dist: List[float] = []
-    prev: List = []
+def dijkstra_with_arrays(graph: GraphInterface, start: int, key_to_find: int):
+    Q: List[tuple] = []
+    visited = set()
+    dist = {}
+    prev = {}
+    stack = []
     for v in graph.get_all_v():
         dist[v] = float('inf')
         prev[v] = None
-        Q.add(v)
-    dist[start.get_key()] = 0
-    while Q:
-        u = np.min(dist)
+        # Q.append(v)
+    dist[start] = 0
+    Q.append((start, dist[start]))
+    while Q and len(visited) != graph.v_size():
+        u = min(Q, key=operator.itemgetter(1))
+        Q.remove(u)
+        if u not in visited:
+            visited.add(u[0])
+            if u[0] == key_to_find:
+                u = key_to_find
+                if prev[u] is not None or u == start:
+                    while u is not None:
+                        stack.insert(0, u)
+                        u = prev[u]
+                    break
 
+            for dest, w in graph.all_out_edges_of_node(u[0]).items():
+                if dest not in visited:
+                    alt = dist[u[0]] + w
+                    if alt < dist[dest]:
+                        dist[dest] = alt
+                        prev[dest] = u[0]
+                        Q.append((dest, dist[dest]))
+
+    return dist[key_to_find], stack

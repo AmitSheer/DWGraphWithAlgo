@@ -52,14 +52,8 @@ graphs = [
     'G_30000_240000_0.json']
 results = {}
 algo = GraphAlgo()
-# for graph in graphs:
-#     algo.load_from_json('Graphs_no_pos/' + graph)
-# #     # algo.plot_graph()
-# #     results[graph] = {}
-#     G = nx.DiGraph()
-#     copy_graph(algo.get_graph(), G)
-#     print(graph, nx.number_strongly_connected_components(G))
 for graph in graphs:
+    print(graph)
     algo.load_from_json('Graphs_no_pos/' + graph)
     results[graph] = {}
     G = nx.DiGraph()

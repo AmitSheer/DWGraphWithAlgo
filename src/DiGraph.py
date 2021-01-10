@@ -58,8 +58,8 @@ class DiGraph(GraphInterface):
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if self.__nodes.get(node_id) is None:
             self.__nodes.__setitem__(node_id, NodeData(node_id, pos))
-            self.__edges.__setitem__(node_id, dict())
-            self.__edges_into.__setitem__(node_id, dict())
+            self.__edges.__setitem__(node_id, {})
+            self.__edges_into.__setitem__(node_id, {})
             self.__mc += 1
             return True
         return False

@@ -6,7 +6,7 @@ from src.DiGraph import DiGraph
 from src.Encoders.NodeDataEncoder import *
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphPloter import *
-from src.algorithms.Dijkstra import dijkstra
+from src.algorithms.Dijkstra import *
 from src.algorithms.Trajan import *
 from src.fruchterman_reingold import fruchterman_reingold
 
@@ -98,19 +98,18 @@ class GraphAlgo(GraphAlgoInterface):
         https://en.wikipedia.org/wiki/Dijkstra's_algorithm
         """
         self.reset()
-        dijkstra(self.__graph.get_all_v().get(id1), id2, self.__graph)
-        nodes_path = []
-        # node: NodeData = self.__graph.get_all_v().get(id2)
-        nodes_path.append(id2)
-        node = id2
-        while self.__graph.get_all_v().get(node).get_parent() is not None:
-            nodes_path.append(self.__graph.get_all_v().get(node).get_parent())
-            node = self.__graph.get_all_v().get(node).get_parent()
-        node = self.__graph.get_all_v().get(id2)
-        nodes_path.reverse()
-        if len(nodes_path) == 1:
-            return node.get_dist(), []
-        return node.get_dist(), nodes_path
+        data = dijkstra_with_arrays(self.__graph, id1, id2)
+        # nodes_path = []
+        # nodes_path.append(id2)
+        # node = id2
+        # while self.__graph.get_all_v().get(node).get_parent() is not None:
+        #     nodes_path.append(self.__graph.get_all_v().get(node).get_parent())
+        #     node = self.__graph.get_all_v().get(node).get_parent()
+        # node = self.__graph.get_all_v().get(id2)
+        # nodes_path.reverse()
+        # if len(nodes_path) == 1:
+        #     return node.get_dist(), []
+        return data
 
     def connected_component(self, id1: int) -> list:
         """
