@@ -33,9 +33,9 @@ The solution to the four problems respectively:
 ## Comparision of run times
 The tests were run on a systemwith the following specs:
  ```
- CPU:  i7-8700K 3.70GHz
- RAM: 16GB 
- SYSTEM: Windows 10 64bit
+    CPU:  i7-8700K 3.70GHz
+    RAM: 16GB 
+    SYSTEM: Windows 10 64bit
  ```
  
 ![Python_results_Graph](https://user-images.githubusercontent.com/26150015/104122358-429b6700-534d-11eb-9dad-4be9f4d2ab91.png)
