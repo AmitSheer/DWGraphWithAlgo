@@ -75,18 +75,18 @@ class DiGraph(GraphInterface):
         if self.__nodes.get(node_id) is not None:
             edges = self.all_in_edges_of_node(node_id).copy()
             for edge in edges:
-                self.remove_edge(edge, node_id)
+                self.remove_edge(edge, node_id, True)
             self.__edges_into.pop(node_id)
             edges = self.all_out_edges_of_node(node_id).copy()
             for edge in edges:
-                self.remove_edge(node_id, edge)
+                self.remove_edge(node_id, edge, True)
             self.__edges.pop(node_id)
             self.__nodes.pop(node_id)
             self.__mc += 1
             return True
         return False
 
-    def remove_edge(self, node_id1: int, node_id2: int) -> bool:
+    def remove_edge(self, node_id1: int, node_id2: int, rm_node: bool = False) -> bool:
         """
         Removes an edge from the graph.
         @param node_id1: The start node of the edge
@@ -100,7 +100,8 @@ class DiGraph(GraphInterface):
             if node.get(node_id2) is not None:
                 self.__edges.get(node_id1).pop(node_id2)
                 self.__edges_into.get(node_id2).pop(node_id1)
-                self.__mc += 1
+                if rm_node is False:
+                    self.__mc += 1
                 self.__edges_size -= 1
                 return True
         return False
