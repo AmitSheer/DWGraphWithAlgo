@@ -46,12 +46,15 @@ def compare_connected_component(nx_connected_component: Generator, algo_connecte
         list(list(nx_connected_component)[0]))
 
 
+
 graphs = [
     'G_10_80_0.json', 'G_100_800_0.json', 'G_1000_8000_0.json',
     'G_10000_80000_0.json', 'G_20000_160000_0.json',
     'G_30000_240000_0.json']
 results = {}
 algo = GraphAlgo()
+algo.load_from_json('./data/A5')
+algo.plot_graph()
 for graph in graphs:
     print(graph)
     algo.load_from_json('Graphs_no_pos/' + graph)
@@ -89,5 +92,5 @@ for graph in graphs:
     algo_t2 = time()
     results[graph]['algo_connected_components'] = float(algo_t2 - algo_t1)
     results[graph]['connected_components'] = compare_scc(nx_connected_components, algo_connected_components)
-with open('results.json', 'w') as json_file:
+with open('../results.json', 'w') as json_file:
     json.dump(results, json_file)
